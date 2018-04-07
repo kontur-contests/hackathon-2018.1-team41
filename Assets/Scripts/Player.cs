@@ -8,6 +8,7 @@ public class Player : MonoBehaviour {
 	private float speed;
 
 	private Vector2 direction;
+	private Vector2 lastDirection;
 
 	// Use this for initialization
 	void Start () {
@@ -41,13 +42,32 @@ public class Player : MonoBehaviour {
 		if (Input.GetKey (KeyCode.D)) {
 			direction += Vector2.right;
 		}
-	}
 
+		lastDirection = direction;
+	}
+    
 	void OnCollisionEnter2D(Collision2D coll)
 	{
+		Debug.Log("OnCollisionEnter2D");
 		if (coll.gameObject.tag == "Fire") {
-			// todo: add damage
 			Debug.Log("get damage on fire");
+
+			if (lastDirection == Vector2.up) {
+				direction = Vector2.down;
+			}
+            else if (lastDirection == Vector2.down) {
+			    direction = Vector2.up;
+			}
+            else if (lastDirection == Vector2.left) {
+			    direction = Vector2.right;
+			}
+            else if (lastDirection == Vector2.right) {
+			    direction = Vector2.left;
+			}
+
+		    speed = 8;
+            Move ();
+		    speed = 5;
 		}
 	}
 }
