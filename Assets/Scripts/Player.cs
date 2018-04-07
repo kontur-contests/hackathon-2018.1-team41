@@ -30,6 +30,7 @@ public class Player : MonoBehaviour {
 
 		if (Input.GetKey (KeyCode.W)) {
 			direction += Vector2.up;
+			Debug.Log("Move up");
 		}
 		if (Input.GetKey (KeyCode.S)) {
 			direction += Vector2.down;
@@ -39,6 +40,14 @@ public class Player : MonoBehaviour {
 		}
 		if (Input.GetKey (KeyCode.D)) {
 			direction += Vector2.right;
+		}
+	}
+
+	void OnCollisionEnter2D(Collision2D coll)
+	{
+		if (coll.gameObject.tag == "Fire") {
+			// todo: add damage
+			Debug.Log("get damage on fire");
 		}
 	}
 }
