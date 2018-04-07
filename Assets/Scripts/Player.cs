@@ -98,5 +98,9 @@ public class Player : MonoBehaviour {
             Move ();
 		    speed = 5;
 		}
-	}
+		else if (coll.gameObject.tag == "Door") {
+		    Debug.Log("tooch the door");
+        }
+    }
+
 }
