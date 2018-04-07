@@ -31,7 +31,6 @@ public class Player : MonoBehaviour {
 
 		if (Input.GetKey (KeyCode.W)) {
 			direction += Vector2.up;
-			Debug.Log("Move up");
 		}
 		if (Input.GetKey (KeyCode.S)) {
 			direction += Vector2.down;
@@ -48,7 +47,7 @@ public class Player : MonoBehaviour {
     
 	void OnCollisionEnter2D(Collision2D coll)
 	{
-		Debug.Log("OnCollisionEnter2D");
+		//Debug.Log("OnCollisionEnter2D");
 		if (coll.gameObject.tag == "Fire") {
 			Debug.Log("get damage on fire");
 
