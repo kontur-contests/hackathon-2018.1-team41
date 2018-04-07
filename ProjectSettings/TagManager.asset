@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Fire
   - Door
+  - Door_Vertical
+  - Door_Horizontal
   layers:
   - Default
   - TransparentFX

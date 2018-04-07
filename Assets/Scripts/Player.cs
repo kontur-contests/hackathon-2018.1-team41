@@ -13,6 +13,8 @@ public class Player : MonoBehaviour {
     private const float fireDamage = 30;
     private const float criticalDamage = 300;
 
+    private const int playerDoorShift = 2;
+
 	private Vector2 direction;
 	private Vector2 lastDirection;
 
@@ -72,35 +74,60 @@ public class Player : MonoBehaviour {
             image.color = tempColor;
         }
     }
-    
+
 	void OnCollisionEnter2D(Collision2D coll)
 	{
-		//Debug.Log("OnCollisionEnter2D");
-		if (coll.gameObject.tag == "Fire") {
-			Debug.Log("get damage on fire");
-
-		    addDamage(fireDamage);
-
-            if (lastDirection == Vector2.up) {
-				direction = Vector2.down;
-			}
-            else if (lastDirection == Vector2.down) {
-			    direction = Vector2.up;
-			}
-            else if (lastDirection == Vector2.left) {
-			    direction = Vector2.right;
-			}
-            else if (lastDirection == Vector2.right) {
-			    direction = Vector2.left;
-			}
-
-		    speed = 8;
-            Move ();
-		    speed = 5;
+	    if (coll.gameObject.tag == "Fire")
+		{
+		    FireEvent();
+		    return;
 		}
-		else if (coll.gameObject.tag == "Door") {
-		    Debug.Log("tooch the door");
+
+	    var module = lastDirection == Vector2.up || lastDirection == Vector2.right ? 1 : -1;
+	    if (coll.gameObject.tag == "Door_Vertical" && (lastDirection == Vector2.up || lastDirection == Vector2.down))
+	    {
+	        GoToNextRoom(0, 9 * module, 0, playerDoorShift * module);
+	    }
+	    else if (coll.gameObject.tag == "Door_Horizontal" && (lastDirection == Vector2.right || lastDirection == Vector2.left))
+	    {
+	        GoToNextRoom(21 * module, 0, playerDoorShift * module, 0);
+	    }
+	}
+
+    private void FireEvent()
+    {
+        addDamage(fireDamage);
+
+        if (lastDirection == Vector2.up)
+        {
+            direction = Vector2.down;
         }
+        else if (lastDirection == Vector2.down)
+        {
+            direction = Vector2.up;
+        }
+        else if (lastDirection == Vector2.left)
+        {
+            direction = Vector2.right;
+        }
+        else if (lastDirection == Vector2.right)
+        {
+            direction = Vector2.left;
+        }
+
+        speed = 8;
+        Move();
+        speed = 5;
+    }
+
+    private void GoToNextRoom(int cameraShiftX, int cameraShiftY, int playerShiftX, int playerShiftY)
+    {
+        var cameraTransform = FindObjectOfType<Camera>().GetComponent<Transform>();
+        var currentCameraPosition = cameraTransform.position;
+        var currentPlayerPosition = transform.position;
+
+        cameraTransform.SetPositionAndRotation(new Vector3(currentCameraPosition.x + cameraShiftX, currentCameraPosition.y + cameraShiftY, currentCameraPosition.z), cameraTransform.rotation);
+        transform.SetPositionAndRotation(new Vector3(currentPlayerPosition.x + playerShiftX, currentPlayerPosition.y + playerShiftY, currentPlayerPosition.z), transform.rotation);
     }
 
 }
