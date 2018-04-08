@@ -128,7 +128,7 @@ public class Player : MonoBehaviour {
         }
 
 	    if (coll.gameObject.tag == "Extinguisher") {
-	        Debug.Log("Extinguisher");
+	        //Debug.Log("Extinguisher");
             isOnFire = false;
 	    }
             
