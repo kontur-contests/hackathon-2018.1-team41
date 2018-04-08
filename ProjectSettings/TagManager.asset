@@ -8,6 +8,8 @@ TagManager:
   - Door
   - Door_Vertical
   - Door_Horizontal
+  - Exit
+  - Extinguisher
   layers:
   - Default
   - TransparentFX

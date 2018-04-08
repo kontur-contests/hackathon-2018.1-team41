@@ -10,6 +10,8 @@ public class Player : MonoBehaviour {
 
 	private float damage = 0;
 
+    private bool isOnFire = false;
+
     private const float fireDamage = 30;
     private const float criticalDamage = 300;
 
@@ -27,12 +29,34 @@ public class Player : MonoBehaviour {
 	void Update () {
 		GetInput ();
 		Move ();
-	    updateDamage();
+	    drawFire();
+        updateDamage();
 	}
 
 	void Move() {
 		transform.Translate (direction*speed*Time.deltaTime);
 	}
+
+    void drawFire() {
+        if (isOnFire)
+        {
+            addDamage(0.5f);
+        }
+        setSpriteTransparency("headFire", !isOnFire);
+
+        var gameObj = GameObject.Find("headFire");
+        var headFireSprite = gameObj.GetComponent<Transform>();
+        var currentPlayerPosition = transform.position;
+
+        headFireSprite.SetPositionAndRotation(new Vector3(currentPlayerPosition.x, currentPlayerPosition.y + 1, currentPlayerPosition.z), transform.rotation);
+    }
+
+    void setSpriteTransparency(string spriteName, bool transparent)
+    {
+        var gameObj = GameObject.Find(spriteName);
+        var sprite = gameObj.GetComponent<SpriteRenderer>();
+        sprite.color = new Color(1f, 1f, 1f, transparent ? 0f : 1f);
+    }
 
 	private void GetInput()
 	{
@@ -78,8 +102,9 @@ public class Player : MonoBehaviour {
 	void OnCollisionEnter2D(Collision2D coll)
 	{
 	    if (coll.gameObject.tag == "Fire")
-		{
-		    FireEvent();
+	    {
+	        isOnFire = true;
+            //FireEvent();
 		    return;
 		}
 
@@ -92,7 +117,22 @@ public class Player : MonoBehaviour {
 	    {
 	        GoToNextRoom(21 * module, 0, playerDoorShift * module, 0);
 	    }
-	}
+
+	    if (coll.gameObject.tag == "Exit")
+	    {
+	        var gameOver = GameObject.Find("win");
+	        var image = gameOver.GetComponent<Image>();
+	        var tempColor = image.color;
+	        tempColor.a = 1f;
+	        image.color = tempColor;
+        }
+
+	    if (coll.gameObject.tag == "Extinguisher") {
+	        Debug.Log("Extinguisher");
+            isOnFire = false;
+	    }
+            
+    }
 
     private void FireEvent()
     {
